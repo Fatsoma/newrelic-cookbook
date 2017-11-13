@@ -12,7 +12,6 @@ The agent installs are being converted into libraries, currently the following a
 * php_agent
 * java_agent
 * ruby_agent
-* python_agent
 * nodejs_agent
 * dotnet_agent
 * infrastructure_agent
@@ -21,7 +20,6 @@ More information?
 
 * https://docs.newrelic.com/docs/infrastructure/new-relic-infrastructure/getting-started/introduction-new-relic-infrastructure
 * https://docs.newrelic.com/docs/php/new-relic-for-php
-* https://docs.newrelic.com/docs/python/new-relic-for-python
 * https://docs.newrelic.com/docs/dotnet/new-relic-for-net
 * https://docs.newrelic.com/docs/java/new-relic-for-java
 * https://docs.newrelic.com/docs/nodejs/installing-and-maintaining-nodejs
@@ -35,7 +33,6 @@ Make sure you run Chef >= 0.10.0.
 
 ### Cookbooks:
 
-* poise-python
 * curl
 * apt
 * yum
@@ -124,16 +121,6 @@ Make sure you run Chef >= 0.10.0.
 * `node['newrelic']['repository']['proxy']` - Repository proxy host, defaults to nil
 * `node['newrelic']['repository']['proxy_username']` - Repository proxy username, defaults to nil
 * `node['newrelic']['repository']['proxy_password']` - Repository proxy password, defaults to nil
-
-### python_agent.rb:
-
-* `node['newrelic']['python_agent']['agent_action']` - Agent action, defaults to :install
-* `node['newrelic']['python_agent']['python_version']` - Defaults to "latest". Version numbers can be found at http://download.newrelic.com/python_agent/release/
-* `node['newrelic']['python_agent']['python_venv']` - Virtual environment, default to nil
-* `node['newrelic']['python_agent']['config_file']` - The New Relic python agent config file, defaults to "/etc/newrelic/newrelic.ini"
-* `node['newrelic']['python_agent']['template']['cookbook']` - Sets cookbook for template, defaults to 'newrelic'
-* `node['newrelic']['python_agent']['template']['source']` - Sets source for template, defaults to 'agent/python/newrelic.ini.erb'
-* `node['newrelic']['python_agent']['feature_flag']` - Sets feature_flag, defaults to nil
 
 ### dotnet_agent.rb:
 
@@ -457,61 +444,6 @@ newrelic_agent_java 'Install' do
   app_name 'java_test_app'
 ```
 
-### `newrelic_agent_python`
-This cookbook includes an LWRP for installing the newrelic python agent
-
-The `newrelic_agent_python` resource will handle the requirements to install python application monitoring.
-
-#### Actions
-
-- :install -  will setup the New Relic repository, install package and update newrelic python config with license key.
-- :remove -  Uninstall the New Relic package
-
-#### Attribute parameters
-See https://docs.newrelic.com/docs/agents/python-agent/installation-configuration/python-agent-configuration#general-settings
-for an explanation on each attribute.
-
-* `'license'` - NewRelic license key
-* `'version'` - Python agent version. Will default to latest if nil.
-* `'virtualenv'` - VirtualEnv to install puthon agent into. Default nil.
-* `'config_file'` - Path to config file. Default '/etc/newrelic/newrelic.ini'
-* `'cookbook'` - Cookbook holding config template. Default this cookbook.
-* `'source'` - Config template source. Default 'agent/python/newrelic.ini.erb'
-* `'app_name'` - Your newrelic python app name as it will show in the UI. Default => 'Python Application'
-
-#### Advanced parameters
-
-* `'enabled'` - Defaults to true
-* `'logfile'` - Defaults to '/tmp/newrelic-python-agent.log'
-* `'loglevel'` - Defaults to 'info'
-* `'daemon_ssl'` - Defaults to true
-* `'high_security'` - Defaults to false
-* `'capture_params'` - Defaults to false
-* `'ignored_params'` - Defaults to ' '
-* `'transaction_tracer_enable'` - Defaults to true
-* `'transaction_tracer_threshold'` - Defaults to 'apdex_f'
-* `'transaction_tracer_record_sql'` - Defaults to 'obfuscated'
-* `'transaction_tracer_stack_trace_threshold'` - Defaults to '0.5'
-* `'transaction_tracer_slow_sql'` - Defaults to true
-* `'transaction_tracer_explain_threshold'` - Defaults to '0.5'
-* `'thread_profiler_enable'` - Defaults to true
-* `'error_collector_enable'` - Defaults to true
-* `'error_collector_ignore_errors'` - Defaults to ' '
-* `'browser_monitoring_auto_instrument'` - Defaults to true
-* `'cross_application_tracer_enable'` - Defaults to true
-* `'feature_flag'` - Defaults to nil
-
-#### Example
-
-```ruby
-include_recipe 'python'
-
-newrelic_agent_python 'Install' do
-  license '0000ffff0000ffff0000ffff0000ffff0000ffff'
-  app_name 'my_python_app'
-end
-```
-
 ### `newrelic_agent_nodejs`
 This cookbook includes an LWRP for installing the newrelic nodejs agent
 The `newrelic_agent_nodejs` resource will handle the requirements to install nodejs application monitoring.
@@ -530,13 +462,13 @@ for an explanation on each attribute.
 * `'app_name'` - Your newrelic nodejs app name as it will show in the UI. Default => 'My Node App'
 * `'app_path'` - Required true. Default nil.  You must provide a valid path to your nodejs app root dir.
 * `'cookbook'` - Cookbook holding config template. Default this cookbook.
-* `'source'` - Config template source. Default 'agent/python/newrelic.ini.erb'
+* `'source'` - Config template source. Default 'agent/nodejs/newrelic.js.erb'
 
 #### Advanced parameters
 
 * `'enabled'` - Defaults to true
-* `'logfile'` - Defaults to '/tmp/newrelic-python-agent.log'
-* `'loglevel'` - Defaults to 'info'
+* `'app_log_filepath'` - Defaults to nil
+* `'app_log_level'` - Defaults to 'info'
 
 #### Example
 
@@ -664,7 +596,6 @@ include the bits and pieces explicitly in a run list:
 `recipe[newrelic::java_agent]`
 `recipe[newrelic::nodejs_agent]`
 `recipe[newrelic::php_agent]`
-`recipe[newrelic::python_agent]`
 `recipe[newrelic::ruby_agent]`
 `recipe[newrelic::infrastructure_agent]`
 ```
@@ -678,7 +609,6 @@ include the bits and pieces explicitly in a run list:
 * [New Relic for Server Monitoring](https://docs.newrelic.com/docs/server/new-relic-for-server-monitoring)
 * [New Relic for PHP](https://docs.newrelic.com/docs/php/new-relic-for-php)
 * [newrelic-daemon startup modes](https://newrelic.com/docs/php/newrelic-daemon-startup-modes)
-* [New Relic for Python](https://docs.newrelic.com/docs/python/new-relic-for-python)
 * [New Relic for .NET](https://docs.newrelic.com/docs/dotnet/new-relic-for-net)
 * [New Relic for Java](https://docs.newrelic.com/docs/java/new-relic-for-java)
 * ["newrelic" cookbook by heavywater on github](https://github.com/heavywater/chef-newrelic)
