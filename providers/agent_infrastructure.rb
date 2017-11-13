@@ -32,19 +32,6 @@ def install_newrelic_infrastructure_service_linux
     action new_resource.version unless new_resource.version.nil?
   end
 
-  # workaround for issue on RHEL family version six
-  # service is not known to chkconfig
-  # dribble the issue by not making use of the RHEL service provider
-  service_provider = if node['platform_family'] == 'rhel' && node['platform_version'] =~ /^6/
-                       Chef::Provider::Service::Upstart
-                     end
-
-  # setup newrelic infrastructure service
-  service 'newrelic-infra' do
-    provider service_provider unless service_provider.nil?
-    action new_resource.service_actions
-  end
-
   # lay down newrelic-infra agent config
   template '/etc/newrelic-infra.yml' do
     cookbook new_resource.template_cookbook
@@ -56,6 +43,19 @@ def install_newrelic_infrastructure_service_linux
       :resource => new_resource
     )
     notifies :restart, 'service[newrelic-infra]', :delayed
+  end
+
+  # workaround for issue on RHEL family version six
+  # service is not known to chkconfig
+  # dribble the issue by not making use of the RHEL service provider
+  service_provider = if node['platform_family'] == 'rhel' && node['platform_version'] =~ /^6/
+                       Chef::Provider::Service::Upstart
+                     end
+
+  # setup newrelic infrastructure service
+  service 'newrelic-infra' do
+    provider service_provider unless service_provider.nil?
+    action new_resource.service_actions
   end
 end
 
