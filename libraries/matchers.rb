@@ -5,7 +5,6 @@ if defined?(ChefSpec)
   ChefSpec.define_matcher :newrelic_agent_java
   ChefSpec.define_matcher :newrelic_agent_ruby
   ChefSpec.define_matcher :newrelic_agent_dotnet
-  ChefSpec.define_matcher :newrelic_agent_python
   ChefSpec.define_matcher :newrelic_agent_nodejs
 
   def install_newrelic_server_monitor(resource_name)
@@ -32,10 +31,6 @@ if defined?(ChefSpec)
     ChefSpec::Matchers::ResourceMatcher.new(:newrelic_agent_dotnet, :install, resource_name)
   end
 
-  def install_newrelic_agent_python(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:newrelic_agent_python, :install, resource_name)
-  end
-
   def install_newrelic_agent_nodejs(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:newrelic_agent_nodejs, :install, resource_name)
   end
@@ -58,10 +53,6 @@ if defined?(ChefSpec)
 
   def remove_newrelic_agent_dotnet(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:newrelic_agent_dotnet, :remove, resource_name)
-  end
-
-  def remove_newrelic_agent_python(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:newrelic_agent_python, :remove, resource_name)
   end
 
   def remove_newrelic_agent_nodejs(resource_name)

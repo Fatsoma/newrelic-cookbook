@@ -14,7 +14,6 @@ end
 source_url 'https://github.com/djoos-cookbooks/newrelic' if respond_to?(:source_url)
 issues_url 'https://github.com/djoos-cookbooks/newrelic/issues' if respond_to?(:issues_url)
 
-depends 'poise-python'
 depends 'curl'
 depends 'apt'
 depends 'yum'
@@ -27,5 +26,4 @@ recipe 'newrelic::infrastructure_agent', 'Installs New Relic Infrastructure agen
 recipe 'newrelic::java_agent', 'Installs the New Relic Java agent.'
 recipe 'newrelic::nodejs_agent', 'Installs New Relic Node.js agent.'
 recipe 'newrelic::php_agent', 'Installs the New Relic PHP agent.'
-recipe 'newrelic::python_agent', 'Installs the New Relic Python agent.'
 recipe 'newrelic::ruby_agent', 'Installs the New Relic Ruby agent.'
