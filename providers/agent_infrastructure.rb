@@ -37,6 +37,8 @@ def install_newrelic_infrastructure_service_linux
   # dribble the issue by not making use of the RHEL service provider
   service_provider = if node['platform_family'] == 'rhel' && node['platform_version'] =~ /^6/
                        Chef::Provider::Service::Upstart
+                     elsif node.platform?('ubuntu') && node['plaform_version'].to_f < 16.04
+                       Chef::Provider::Service::Upstart
                      end
 
   # setup newrelic infrastructure service
