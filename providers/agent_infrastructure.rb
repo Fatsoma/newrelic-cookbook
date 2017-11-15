@@ -26,6 +26,19 @@ action :install do
 end
 
 def install_newrelic_infrastructure_service_linux
+  # lay down newrelic-infra agent config
+  template '/etc/newrelic-infra.yml' do
+    cookbook new_resource.template_cookbook
+    source new_resource.template_source
+    owner 'root'
+    group 'root'
+    mode '0644'
+    variables(
+      :resource => new_resource
+    )
+    notifies :restart, 'service[newrelic-infra]', :delayed
+  end
+
   # install the newrelic infrastructure agent
   package 'newrelic-infra' do
     action new_resource.action
@@ -40,25 +53,6 @@ def install_newrelic_infrastructure_service_linux
                      elsif node.platform?('ubuntu') && node['plaform_version'].to_f < 16.04
                        Chef::Provider::Service::Upstart
                      end
-
-  # setup newrelic infrastructure service
-  service 'newrelic-infra' do
-    provider service_provider unless service_provider.nil?
-    action :nothing
-  end
-
-  # lay down newrelic-infra agent config
-  template '/etc/newrelic-infra.yml' do
-    cookbook new_resource.template_cookbook
-    source new_resource.template_source
-    owner 'root'
-    group 'root'
-    mode '0644'
-    variables(
-      :resource => new_resource
-    )
-    notifies :restart, 'service[newrelic-infra]', :delayed
-  end
 
   # start newrelic infrastructure service
   service 'newrelic-infra' do
